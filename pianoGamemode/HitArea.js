@@ -28,8 +28,16 @@ HitArea.prototype.unpress = function() {
 	this.pressed = false
 }
 
-HitArea.prototype.checkNoteCollision = function(note) {
-	return this.y - note.height < note.y + note.height && this.y + this.height + note.height > note.y
+HitArea.prototype.hasHitNote = function(note) {
+	return !this.pressed &&	Math.abs(note.y - this.y + (note.height - this.height) / 2) < note.height + this.height / 2
+}
+
+HitArea.prototype.judgeNote = function(note) {
+	const distance = Math.abs(note.y - this.y + (note.height - this.height) / 2)
+
+	if (distance < (note.height + this.height) / 4) return 'PERFECT'
+	else if (distance < (note.height + this.height) / 2) return 'OK'
+	else if (distance < note.height + this.height / 2) return 'MISS'
 }
 
 export default HitArea

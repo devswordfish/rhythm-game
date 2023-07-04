@@ -15,28 +15,21 @@ PianoGamemode.prototype.clear = function() {
 	context.restore()
 }
 
-PianoGamemode.prototype.drawBorder = function() {
+PianoGamemode.prototype.draw = function() {
+	drawBorder.call(this)
+	drawPianoLanes.call(this)
+}
+
+function drawBorder() {
 	context.save()
 	context.lineWidth = 4
 	context.strokeRect(0, 0, canvas.width, canvas.height)
 	context.restore()
 }
 
-PianoGamemode.prototype.drawNotes = function() {
-	Object.values(this.pianoLanes).forEach(pianoLane => {
-		pianoLane.drawNotes()
-	})
-}
-
-PianoGamemode.prototype.drawPianoLanes = function() {
+function drawPianoLanes() {
 	Object.values(this.pianoLanes).forEach(pianoLane => {
 		pianoLane.draw()
-	})
-}
-
-PianoGamemode.prototype.drawHitAreas = function() {
-	Object.values(this.pianoLanes).forEach(pianoLane => {
-		pianoLane.drawHitArea()
 	})
 }
 
