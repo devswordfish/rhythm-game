@@ -5,60 +5,64 @@ const context = canvas.getContext('2d')
 
 canvas.width = 600
 canvas.height = 500
+context.font = '26px monospace'
 
 window.canvas = canvas
 window.context = context
 
-const NOTE_SPEED = 3
+const NOTE_SPEED = 10
 const NOTE_WIDTH = 50
-const NOTE_HEIGHT = 20
+const NOTE_HEIGHT = 50
+const NOTE_DELAY = Math.round(canvas.height / NOTE_SPEED * (1000 / 60))
 const KEYS = ['d', 'f', 'j', 'k']
 
 const pianoGamemode = new PianoGamemode(NOTE_WIDTH, NOTE_HEIGHT, NOTE_SPEED)
 
-pianoGamemode.createLane(KEYS[0], 50, 450, [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000])
-pianoGamemode.createLane(KEYS[1], 130, 450, [250, 1250, 2250, 3250, 4250, 5250, 6250, 7250, 8250, 9250])
-pianoGamemode.createLane(KEYS[2], 210, 450, [500, 1500, 2500, 3500, 4500, 5500, 6500, 7500, 8500, 9500])
-pianoGamemode.createLane(KEYS[3], 290, 450, [750, 1750, 2750, 3750, 4750, 5750, 6750, 7750, 8750, 9750])
+pianoGamemode.createLane(KEYS[0], 50, [])
+pianoGamemode.createLane(KEYS[1], 130, [])
+pianoGamemode.createLane(KEYS[2], 210, [])
+pianoGamemode.createLane(KEYS[3], 290, [3600, 5900, 8100])
 
 const music = new Audio('./music_test.mp3')
-music.volume = 0
-const WAITING_TIME = 0 // in mileseconds
+// music.volume = 0
+const WAITING_TIME = 3000 // in mileseconds
+const MUSIC_START_TIME = NOTE_DELAY + WAITING_TIME
 let startTime = 0 // time when update function is called (mileseconds)
 let started = false
 
 function update(timestamp) {
 	if (!startTime) startTime = timestamp
 	const frameTime = timestamp - startTime // real time (mileseconds)
-	const currentTime = frameTime - WAITING_TIME // music time (mileseconds)
+	const currentTime = frameTime - MUSIC_START_TIME // music time (mileseconds)
 
-	// play the music after some time
-	if (!started && frameTime > WAITING_TIME) {
-		started = true
-		music.play()
-	}
+	if (!started) {
+		// wait some time before starting the game
+		if (frameTime > WAITING_TIME) {
+			started = true
+		}
+	} else {
+		// wait some time to sync the notes
+		if (music.paused && frameTime > MUSIC_START_TIME) {
+			music.play()
+		}
 
-	// when the music is playing
-	if (!music.ended) {
 		pianoGamemode.clear()
+
+		pianoGamemode.drawScore()
+		pianoGamemode.drawCombo()
 
 		pianoGamemode.createNotes(currentTime)
 		pianoGamemode.moveNotes()
 
 		pianoGamemode.draw()
-
-		requestAnimationFrame(update)
-	} else {
-		console.log('MUSIC ENDED')
-		console.log('start time: ', startTime)
-		console.log('current time: ', currentTime)
-		console.log('frame time: ', frameTime)
 	}
+
+	requestAnimationFrame(update)
 }
 
 addEventListener('keydown', e => {
 	const key = e.key
-	
+
 	if (KEYS.includes(key))	pianoGamemode.pressKeyOnLane(key)
 })
 
@@ -67,5 +71,9 @@ addEventListener('keyup', e => {
 
 	if (KEYS.includes(key)) pianoGamemode.unpressKeyOnLane(key)
 })
+
+pianoGamemode.draw()
+pianoGamemode.drawScore()
+pianoGamemode.drawCombo()
 
 requestAnimationFrame(update)

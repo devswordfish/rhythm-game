@@ -1,7 +1,7 @@
 import HitNote from './HitNote.js'
 import HitArea from './HitArea.js'
 
-function PianoLane(x, hitAreaY, noteWidth, noteHeight, notespeed, notesSpawnTime) {
+function PianoLane(x, noteWidth, noteHeight, notespeed, notesSpawnTime) {
 	this.x = x
 	this.border = {
 		left: x - 10,
@@ -11,7 +11,7 @@ function PianoLane(x, hitAreaY, noteWidth, noteHeight, notespeed, notesSpawnTime
 	this.noteHeight = noteHeight
 	this.notespeed = notespeed
 	this.notesSpawnTime = notesSpawnTime
-	this.hitArea = new HitArea(x, hitAreaY, noteWidth, noteHeight)
+	this.hitArea = new HitArea(x, canvas.height - 10 - noteHeight, noteWidth, noteHeight)
 	this.currentIndex = 0
 	this.notes = []
 }
@@ -65,12 +65,14 @@ PianoLane.prototype.createNotes = function(currentTime) {
 }
 
 PianoLane.prototype.pressHitArea = function() {
+	let judgment = ''
 	if (this.notes.length !== 0 && this.hitArea.hasHitNote(this.notes[0])) {
-		console.log(this.hitArea.judgeNote(this.notes[0]))
+		judgment = this.hitArea.judgeNote(this.notes[0])
 		this.notes.shift()
 	}
 		
 	this.hitArea.press()
+	return judgment
 }
 
 PianoLane.prototype.unpressHitArea = function() {
