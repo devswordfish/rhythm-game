@@ -10,7 +10,7 @@ context.font = '26px monospace'
 window.canvas = canvas
 window.context = context
 
-const NOTE_SPEED = 10
+const NOTE_SPEED = 8
 const NOTE_WIDTH = 50
 const NOTE_HEIGHT = 50
 const NOTE_DELAY = Math.round(canvas.height / NOTE_SPEED * (1000 / 60))
@@ -18,14 +18,14 @@ const KEYS = ['d', 'f', 'j', 'k']
 
 const pianoGamemode = new PianoGamemode(NOTE_WIDTH, NOTE_HEIGHT, NOTE_SPEED)
 
-pianoGamemode.createLane(KEYS[0], 50, [])
-pianoGamemode.createLane(KEYS[1], 130, [])
-pianoGamemode.createLane(KEYS[2], 210, [])
-pianoGamemode.createLane(KEYS[3], 290, [3600, 5900, 8100])
+pianoGamemode.createLane(KEYS[0], 50, [], [[0, 600]])
+pianoGamemode.createLane(KEYS[1], 130, [0, 600], [])
+pianoGamemode.createLane(KEYS[2], 210, [], [[3600, 5900]])
+pianoGamemode.createLane(KEYS[3], 290, [3600, 5900, 8100], [])
 
 const music = new Audio('./music_test.mp3')
-// music.volume = 0
-const WAITING_TIME = 3000 // in mileseconds
+music.volume = 0
+const WAITING_TIME = 0 // in mileseconds
 const MUSIC_START_TIME = NOTE_DELAY + WAITING_TIME
 let startTime = 0 // time when update function is called (mileseconds)
 let started = false

@@ -29,7 +29,7 @@ HitArea.prototype.unpress = function() {
 }
 
 HitArea.prototype.hasHitNote = function(note) {
-	return !this.pressed &&	Math.abs(note.y - this.y + (note.height - this.height) / 2) < note.height + this.height / 2
+	return Math.abs(note.y - this.y + (note.height - this.height) / 2) < note.height + this.height / 2
 }
 
 HitArea.prototype.judgeNote = function(note) {

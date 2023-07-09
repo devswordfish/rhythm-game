@@ -49,8 +49,8 @@ PianoGamemode.prototype.drawCombo = function() {
 	context.fillText(this.combo, canvas.width - 100, 230)
 }
 
-PianoGamemode.prototype.createLane = function(key, x, notesSpawnTime) {
-	this.pianoLanes[key] = new PianoLane(x, this.noteWidth, this.noteHeight, this.noteSpeed, notesSpawnTime)
+PianoGamemode.prototype.createLane = function(key, x, hitNotesTime, holdNotesTime) {
+	this.pianoLanes[key] = new PianoLane(x, this.noteWidth, this.noteHeight, this.noteSpeed, hitNotesTime, holdNotesTime)
 }
 
 PianoGamemode.prototype.createNotes = function(currentTime) {
@@ -84,7 +84,21 @@ PianoGamemode.prototype.pressKeyOnLane = function(key) {
 }
 
 PianoGamemode.prototype.unpressKeyOnLane = function(key) {
-	this.pianoLanes[key].unpressHitArea()
+	const judgment = this.pianoLanes[key].unpressHitArea()
+
+	switch (judgment) {
+		case 'PERFECT':
+			this.score += 10
+			this.combo++
+			break
+		case 'OK':
+			this.score += 4
+			this.combo++
+			break		
+		case 'MISS':
+			this.combo = 0
+			break
+	}
 }
 
 export default PianoGamemode
