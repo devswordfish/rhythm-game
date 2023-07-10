@@ -1,4 +1,4 @@
-import PianoLane from './Pianolane.js'
+import PianoLane from './PianoLane.js'
 import { JUDGEMENT } from './judgement.js'
 
 function PianoGamemode(noteWidth, noteHeight, noteSpeed) {

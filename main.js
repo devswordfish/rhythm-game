@@ -17,30 +17,31 @@ const NOTE_DELAY = Math.round(canvas.height / NOTE_SPEED * (1000 / 60))
 const KEYS = ['d', 'f', 'j', 'k']
 
 const pianoGamemode = new PianoGamemode(NOTE_WIDTH, NOTE_HEIGHT, NOTE_SPEED)
+pianoGamemode.createLane(KEYS[0], 50, [966, 2360, 4566, 5068, 5636, 6204, 17700], [[13349, 15599]])
+pianoGamemode.createLane(KEYS[1], 130, [4784, 5352, 5920, 8966, 11166, 13349, 15599], [])
+pianoGamemode.createLane(KEYS[2], 210, [83, 7050, 7552, 8120, 15599], [[966, 2360], [8966, 11166]])
+pianoGamemode.createLane(KEYS[3], 290, [2360, 6766, 7268, 7836, 8404, 11166, 13349, 17700], [])
 
-pianoGamemode.createLane(KEYS[0], 50, [], [[0, 9000]])
-pianoGamemode.createLane(KEYS[1], 130, [0, 600], [])
-pianoGamemode.createLane(KEYS[2], 210, [], [[3600, 5900]])
-pianoGamemode.createLane(KEYS[3], 290, [3600, 5900, 8100], [])
+const music = new Audio('./perception.mp3')
 
-const music = new Audio('./music_test.mp3')
-music.volume = 0
-const WAITING_TIME = 0 // in mileseconds
+const WAITING_TIME = 1000 // in mileseconds
 const MUSIC_START_TIME = NOTE_DELAY + WAITING_TIME
 let startTime = 0 // time when update function is called (mileseconds)
 let started = false
+let isPlaying = false
 
 function update(timestamp) {
 	if (!startTime) startTime = timestamp
 	const frameTime = timestamp - startTime // real time (mileseconds)
-	const currentTime = frameTime - MUSIC_START_TIME // music time (mileseconds)
-
+	
 	if (!started) {
 		// wait some time before starting the game
 		if (frameTime > WAITING_TIME) {
 			started = true
 		}
 	} else {
+		const currentTime = frameTime - WAITING_TIME // music time (mileseconds)
+
 		// wait some time to sync the notes
 		if (music.paused && frameTime > MUSIC_START_TIME) {
 			music.play()
@@ -76,4 +77,9 @@ pianoGamemode.draw()
 pianoGamemode.drawScore()
 pianoGamemode.drawCombo()
 
-requestAnimationFrame(update)
+addEventListener('click', () => {
+	if (!isPlaying) {
+		requestAnimationFrame(update)
+		isPlaying = true
+	}
+})
