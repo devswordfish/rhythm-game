@@ -1,4 +1,5 @@
 import PianoLane from './Pianolane.js'
+import { JUDGEMENT } from './judgement.js'
 
 function PianoGamemode(noteWidth, noteHeight, noteSpeed) {
 	this.noteWidth = noteWidth
@@ -61,7 +62,7 @@ PianoGamemode.prototype.createNotes = function(currentTime) {
 
 PianoGamemode.prototype.moveNotes = function() {
 	Object.values(this.pianoLanes).forEach(pianoLane => {
-		pianoLane.moveNotes()
+		pianoLane.moveNotes(() => this.combo = 0)
 	})
 }
 
@@ -69,15 +70,15 @@ PianoGamemode.prototype.pressKeyOnLane = function(key) {
 	const judgment = this.pianoLanes[key].pressHitArea()
 
 	switch (judgment) {
-		case 'PERFECT':
+		case JUDGEMENT.PERFECT:
 			this.score += 10
 			this.combo++
 			break
-		case 'OK':
+		case JUDGEMENT.OK:
 			this.score += 4
 			this.combo++
 			break		
-		case 'MISS':
+		case JUDGEMENT.MISS:
 			this.combo = 0
 			break
 	}
@@ -87,15 +88,15 @@ PianoGamemode.prototype.unpressKeyOnLane = function(key) {
 	const judgment = this.pianoLanes[key].unpressHitArea()
 
 	switch (judgment) {
-		case 'PERFECT':
+		case JUDGEMENT.PERFECT:
 			this.score += 10
 			this.combo++
 			break
-		case 'OK':
+		case JUDGEMENT.OK:
 			this.score += 4
 			this.combo++
 			break		
-		case 'MISS':
+		case JUDGEMENT.MISS:
 			this.combo = 0
 			break
 	}

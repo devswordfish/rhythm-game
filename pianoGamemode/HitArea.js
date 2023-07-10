@@ -1,3 +1,5 @@
+import { MAX_JUDGE_DISTNCE } from './judgement.js'
+
 function HitArea(x, y, width, height) {
 	this.x = x
 	this.y = y
@@ -28,16 +30,8 @@ HitArea.prototype.unpress = function() {
 	this.pressed = false
 }
 
-HitArea.prototype.hasHitNote = function(note) {
-	return Math.abs(note.y - this.y + (note.height - this.height) / 2) < note.height + this.height / 2
-}
-
-HitArea.prototype.judgeNote = function(note) {
-	const distance = Math.abs(note.y - this.y + (note.height - this.height) / 2)
-
-	if (distance < (note.height + this.height) / 4) return 'PERFECT'
-	else if (distance < (note.height + this.height) / 2) return 'OK'
-	else if (distance < note.height + this.height / 2) return 'MISS'
+HitArea.prototype.hasHitNote = function(noteY) {
+	return Math.abs(noteY - this.y) < MAX_JUDGE_DISTNCE
 }
 
 export default HitArea

@@ -10,7 +10,7 @@ context.font = '26px monospace'
 window.canvas = canvas
 window.context = context
 
-const NOTE_SPEED = 8
+const NOTE_SPEED = 10
 const NOTE_WIDTH = 50
 const NOTE_HEIGHT = 50
 const NOTE_DELAY = Math.round(canvas.height / NOTE_SPEED * (1000 / 60))
@@ -18,7 +18,7 @@ const KEYS = ['d', 'f', 'j', 'k']
 
 const pianoGamemode = new PianoGamemode(NOTE_WIDTH, NOTE_HEIGHT, NOTE_SPEED)
 
-pianoGamemode.createLane(KEYS[0], 50, [], [[0, 600]])
+pianoGamemode.createLane(KEYS[0], 50, [], [[0, 9000]])
 pianoGamemode.createLane(KEYS[1], 130, [0, 600], [])
 pianoGamemode.createLane(KEYS[2], 210, [], [[3600, 5900]])
 pianoGamemode.createLane(KEYS[3], 290, [3600, 5900, 8100], [])

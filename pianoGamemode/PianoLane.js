@@ -2,6 +2,8 @@ import HitNote from './HitNote.js'
 import HoldNote from './HoldNote.js'
 import HitArea from './HitArea.js'
 
+import { JUDGEMENT, Judger } from './judgement.js'
+
 function PianoLane(x, noteWidth, noteHeight, noteSpeed, hitNotesTime, holdNotesTime) {
 	this.x = x
 	this.border = {
@@ -42,10 +44,11 @@ function drawNotes() {
 	}
 }
 
-PianoLane.prototype.moveNotes = function() {
+PianoLane.prototype.moveNotes = function(resetComboFunc) {
 	for (const note of this.notes) {
 		if (note.hasReachedHitArea(this.hitArea)) {
 			this.notes = this.notes.filter(n => n !== note)
+			resetComboFunc()
 		} else {
 			note.move()
 		}
@@ -89,16 +92,20 @@ PianoLane.prototype.pressHitArea = function() {
 
 	if (this.notes.length !== 0) {
 		const firstNote = this.notes[0]
-		const noteHitBox = firstNote.getHitBox()
 
-		if (this.hitArea.hasHitNote(noteHitBox) && !this.hitArea.pressed) {
-			judgement = this.hitArea.judgeNote(noteHitBox)
-			
+		if (!this.hitArea.pressed) {
 			if (HitNote.prototype.isPrototypeOf(firstNote)) {
-				this.notes.shift()
+				if (this.hitArea.hasHitNote(firstNote.y)) {
+					judgement = Judger.judgeHitNote(firstNote.y, this.hitArea.y)
+					this.notes.shift()
+				}
 			} else if (HoldNote.prototype.isPrototypeOf(firstNote)) {
-				if (judgement === 'MISS') this.notes.shift()
-				else firstNote.lockStartNote(this.hitArea)
+				if (this.hitArea.hasHitNote(firstNote.y)) {
+					judgement = Judger.judgeStartHoldnote(firstNote.y, this.hitArea.y)
+
+					if (judgement === JUDGEMENT.MISS) this.notes.shift()
+					else firstNote.lockStartNote(this.hitArea.y)
+				}
 			}
 		}
 	}
@@ -115,10 +122,8 @@ PianoLane.prototype.unpressHitArea = function() {
 		const firstNote = this.notes[0]
 		
 		if (HoldNote.prototype.isPrototypeOf(firstNote)) {
-			const noteHitBox = firstNote.getHitBox()
-
 			if (firstNote.isLocked) {
-				judgement = this.hitArea.judgeNote(noteHitBox) || 'MISS'
+				judgement = Judger.judgeEndHoldNote(firstNote.endY, this.hitArea.y)
 				this.notes.shift()
 			}
 		}

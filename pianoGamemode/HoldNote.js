@@ -22,18 +22,9 @@ HoldNote.prototype.hasReachedHitArea = function(hitArea) {
 	return (this.isLocked ? this.endY : this.y) > hitArea.y + hitArea.height
 }
 
-HoldNote.prototype.getHitBox = function() {
-	return {
-		x: this.x,
-		y: this.isLocked ? this.endY : this.y,
-		width: this.width,
-		height: this.height
-	}
-}
-
-HoldNote.prototype.lockStartNote = function(hitArea) {
+HoldNote.prototype.lockStartNote = function(y) {
 	this.isLocked = true
-	this.y = hitArea.y
+	this.y = y
 }
 
 Object.setPrototypeOf(HoldNote.prototype, Note.prototype)

@@ -17,15 +17,6 @@ HitNote.prototype.hasReachedHitArea = function(hitArea) {
 	return this.y > hitArea.y + hitArea.height
 }
 
-HitNote.prototype.getHitBox = function() {
-	return {
-		x: this.x,
-		y: this.y,
-		width: this.width,
-		height: this.height
-	}
-}
-
 Object.setPrototypeOf(HitNote.prototype, Note.prototype)
 
 export default HitNote
